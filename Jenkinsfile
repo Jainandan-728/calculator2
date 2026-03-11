@@ -3,6 +3,13 @@ pipeline {
 
     stages {
 
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/Jainandan-728/calculator2.git'
+            }
+        }
+
         stage('Setup Python Environment') {
             steps {
                 sh '''
@@ -16,6 +23,14 @@ pipeline {
             steps {
                 sh '''
                 ./venv/bin/pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Calculator Script') {
+            steps {
+                sh '''
+                ./venv/bin/python calculator.py
                 '''
             }
         }

@@ -12,13 +12,20 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip3 install -r requirements.txt'
+                sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'python3 -m unittest test_calculator.py'
+                sh '''
+                . venv/bin/activate
+                python -m unittest test_calculator.py
+                '''
             }
         }
 

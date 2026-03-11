@@ -3,19 +3,26 @@ pipeline {
 
     stages {
 
-        stage('Clone Repo') {
+        stage('Clone Repository') {
             steps {
                 git branch: 'main',
                 url: 'https://github.com/Jainandan-728/calculator2.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Python Environment') {
             steps {
                 sh '''
                 python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
+                ./venv/bin/pip install --upgrade pip
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                ./venv/bin/pip install -r requirements.txt
                 '''
             }
         }
@@ -23,11 +30,19 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                . venv/bin/activate
-                python -m unittest test_calculator.py
+                ./venv/bin/python -m unittest test_calculator.py
                 '''
             }
         }
 
+    }
+
+    post {
+        success {
+            echo 'Build and Tests Passed Successfully'
+        }
+        failure {
+            echo 'Build Failed'
+        }
     }
 }
